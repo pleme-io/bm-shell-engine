@@ -1,0 +1,150 @@
+shell:
+  vi_mode: true
+  key_timeout: 20
+  func_nest: 1000
+  auto_cd: true
+  extended_glob: true
+  interactive_comments: true
+
+history:
+  file: "${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+  size: 1000000
+  dedup: true
+  share: true
+  ignore_space: true
+
+theme:
+  name: nord
+  colors:
+    nord0: "#2E3440"
+    nord1: "#3B4252"
+    nord2: "#434C5E"
+    nord3: "#4C566A"
+    nord4: "#D8DEE9"
+    nord5: "#E5E9F0"
+    nord6: "#ECEFF4"
+    nord7: "#8FBCBB"
+    nord8: "#88C0D0"
+    nord9: "#81A1C1"
+    nord10: "#5E81AC"
+    nord11: "#BF616A"
+    nord12: "#D08770"
+    nord13: "#EBCB8B"
+    nord14: "#A3BE8C"
+    nord15: "#B48EAD"
+
+prompt:
+  engine: starship
+  defer: true
+
+fuzzy:
+  backend: skim
+  ctrl_t: true
+  ctrl_r: false  # handled by atuin
+  alt_c: true
+
+completion:
+  engine: zsh
+  cache_hours: 24
+  fuzzy_error_ratio: 0.33
+
+plugins:
+  zoxide:
+    source:
+      nixpkgs: zoxide
+    priority: 40
+    init: 'eval "$(zoxide init zsh --cmd cd)"'
+  atuin:
+    source:
+      nixpkgs: atuin
+    priority: 50
+    init: 'eval "$(atuin init zsh --disable-up-arrow)"'
+  direnv:
+    source:
+      nixpkgs: direnv
+    priority: 90
+    init: 'eval "$(direnv hook zsh)"'
+  starship:
+    source:
+      nixpkgs: starship
+    priority: 95
+    defer: true
+    init: 'eval "$(starship init zsh)"'
+
+keybindings:
+  vicmd:
+    k: up-line-or-history
+    j: down-line-or-history
+    "^A": beginning-of-line
+    "^E": end-of-line
+    "/": history-incremental-search-backward
+    "?": history-incremental-search-forward
+    v: edit-command-line
+    "y": vi-yank-clip
+  viins:
+    "^A": beginning-of-line
+    "^E": end-of-line
+    "^?": backward-delete-char
+    "^H": backward-delete-char
+    "^[[3~": delete-char
+    "^[[1;5C": forward-word
+    "^[[1;5D": backward-word
+    "^[[1;3C": forward-word
+    "^[[1;3D": backward-word
+    "^[[A": up-line-or-beginning-search
+    "^[[B": down-line-or-beginning-search
+    "^P": up-line-or-beginning-search
+    "^N": down-line-or-beginning-search
+
+widgets:
+  vi-yank-clip:
+    type: clipboard-yank
+  skim-file-content-widget:
+    type: fuzzy-grep
+    bind: "^F"
+
+aliases:
+  navigation:
+    "..": "cd .."
+    "...": "cd ../.."
+    "....": "cd ../../.."
+  git:
+    g: git
+    gs: git status
+    ga: git add
+    gaa: git add --all
+    gc: git commit
+    gcm: git commit -m
+    gp: git push
+    gpl: git pull
+    gd: git diff
+    gds: git diff --staged
+    gl: git log --oneline --graph --decorate
+    gla: git log --oneline --graph --decorate --all
+    gco: git checkout
+    gcb: git checkout -b
+    gb: git branch
+    gba: git branch -a
+    gf: git fetch
+    gfa: git fetch --all --prune
+  nix:
+    nix:
+      command: nix
+      noglob: true
+    nix-shell:
+      command: nix-shell --run zsh
+      noglob: true
+    nix-build:
+      command: nix build
+      noglob: true
+    nix-dev:
+      command: nix develop
+      noglob: true
+  rust:
+    cr: cargo run
+    ct: cargo test
+    cb: cargo build
+    cbr: cargo build --release
+    cc: cargo check
+    cl: cargo clippy
+    cf: cargo fmt
