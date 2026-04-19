@@ -21,7 +21,10 @@ anyhow = "1.0"
 thiserror = "2.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.9"
-figment = { version = "0.10", features = ["yaml", "env"] }
+# Config discovery + provider chain via shikumi (the pleme-io standard).
+# Replaces direct figment use; shikumi wraps figment with a fluent API
+# that matches the app's YAML + env pattern out of the box.
+shikumi = { git = "https://github.com/pleme-io/shikumi" }
 handlebars = "6"
 dirs = "6.0"
 toml = "0.8"

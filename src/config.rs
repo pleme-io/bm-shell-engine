@@ -1,8 +1,4 @@
 use anyhow::Result;
-use figment::{
-    providers::{Env, Format, Yaml},
-    Figment,
-};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -344,11 +340,14 @@ fn default_widgets() -> BTreeMap<String, WidgetConfig> {
     m
 }
 
-/// Load configuration using Figment (defaults -> YAML file -> env vars)
+/// Load configuration via shikumi's provider chain (YAML file → env vars).
+///
+/// Env vars use the `BM_SHELL_` prefix with `__` as the nested-key
+/// separator, e.g. `BM_SHELL_THEME__NAME=nord`.
 pub fn load(path: &Path) -> Result<ShellConfig> {
-    let config: ShellConfig = Figment::new()
-        .merge(Yaml::file(path))
-        .merge(Env::prefixed("BM_SHELL_").split("__"))
+    let config: ShellConfig = shikumi::ProviderChain::new()
+        .with_file(path)
+        .with_env("BM_SHELL_")
         .extract()
         .map_err(|e| anyhow::anyhow!("config error: {e}"))?;
     Ok(config)
